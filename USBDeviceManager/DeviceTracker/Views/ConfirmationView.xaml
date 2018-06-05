@@ -1,0 +1,99 @@
+﻿<Window x:Class="DeviceTracker.Views.ConfirmationView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:ignore="http://www.galasoft.ch/ignore"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:vm="clr-namespace:DeviceTracker.ViewModel"
+        Title="Device Tracker"
+        MaxWidth="480"
+        MaxHeight="140"
+        DataContext="{Binding ConfirmationVm,
+                              Source={StaticResource Locator}}"
+        Icon="/Assets/Images/appIcon.ico"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        d:DesignHeight="150"
+        d:DesignWidth="484"
+        mc:Ignorable="d ignore">
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Width" Value="75" />
+            <Setter Property="Height" Value="25" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <Image Grid.Column="0"
+               Margin="25,20,25,0"
+               VerticalAlignment="Top"
+               Source="/Assets/Images/appIcon.ico"
+               Stretch="UniformToFill" />
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <DockPanel Grid.Row="0" Grid.ColumnSpan="3">
+                <TextBlock DockPanel.Dock="Left"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           Text="Backup files from " />
+
+                <TextBlock Name="deviceName"
+                           DockPanel.Dock="Right"
+                           FontSize="14"
+                           FontWeight="Bold" />
+            </DockPanel>
+
+
+            <TextBlock Grid.Row="1"
+                       Grid.ColumnSpan="3"
+                       Margin="0,12,0,0"
+                       Text="Save photos and videos from this device"
+                       d:IsLocked="True" />
+
+            <Button x:Name="btnNever"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Margin="0,12,0,12"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Click="BtnNever_OnClick"
+                    Content="Never" />
+
+
+            <Button x:Name="btnAlways"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="0,12,10,12"
+                    VerticalAlignment="Top"
+                    Click="BtnAlways_OnClick"
+                    Content="Always" />
+
+            <Button x:Name="btnJustOnce"
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Margin="0,12,12,12"
+                    VerticalAlignment="Top"
+                    Click="BtnJustOnce_OnClick"
+                    Content="Just once" />
+        </Grid>
+
+    </Grid>
+</Window>

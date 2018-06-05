@@ -1,0 +1,7 @@
+C:\Github\Anees\USBDeviceManager\USBDeviceManager\Dlls\DeviceTrackerSupport.dll
+C:\Github\Anees\USBDeviceManager\USBDeviceManager\Dlls\DeviceTrackerSupport.pdb
+C:\Github\Anees\USBDeviceManager\USBDeviceManager\DeviceTrackerSupport\obj\Debug\DeviceTrackerSupport.csprojAssemblyReference.cache
+C:\Github\Anees\USBDeviceManager\USBDeviceManager\DeviceTrackerSupport\obj\Debug\DeviceTrackerSupport.csproj.CoreCompileInputs.cache
+C:\Github\Anees\USBDeviceManager\USBDeviceManager\DeviceTrackerSupport\obj\Debug\DeviceTrackerSupport.csproj.CopyComplete
+C:\Github\Anees\USBDeviceManager\USBDeviceManager\DeviceTrackerSupport\obj\Debug\DeviceTrackerSupport.dll
+C:\Github\Anees\USBDeviceManager\USBDeviceManager\DeviceTrackerSupport\obj\Debug\DeviceTrackerSupport.pdb

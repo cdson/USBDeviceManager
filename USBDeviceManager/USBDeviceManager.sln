@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USBDeviceManager", "DeviceTracker\USBDeviceManager.csproj", "{643779C6-7F6E-4DF7-B7C5-A8BCB4D07F92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USBDeviceManagerSupport", "DeviceTrackerSupport\USBDeviceManagerSupport.csproj", "{1F82EB2D-E0A9-49B6-B2F0-2BCF5270ABE3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{643779C6-7F6E-4DF7-B7C5-A8BCB4D07F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{643779C6-7F6E-4DF7-B7C5-A8BCB4D07F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{643779C6-7F6E-4DF7-B7C5-A8BCB4D07F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{643779C6-7F6E-4DF7-B7C5-A8BCB4D07F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F82EB2D-E0A9-49B6-B2F0-2BCF5270ABE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F82EB2D-E0A9-49B6-B2F0-2BCF5270ABE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F82EB2D-E0A9-49B6-B2F0-2BCF5270ABE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F82EB2D-E0A9-49B6-B2F0-2BCF5270ABE3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3457AF45-F672-4194-AF48-7F5FCBA7343D}
+	EndGlobalSection
+EndGlobal

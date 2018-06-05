@@ -1,0 +1,345 @@
+﻿<Window x:Class="DeviceTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:ignore="http://www.galasoft.ch/ignore"
+        xmlns:local="clr-namespace:DeviceTracker"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:vm="clr-namespace:DeviceTracker.ViewModel"
+        Title="Device Tracker"
+        Width="446"
+        Height="537"
+        DataContext="{Binding Main,
+                              Source={StaticResource Locator}}"
+        Icon="Assets/Images/appIcon.ico"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d ignore">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterKey" />
+            <local:EnumToBooleanConverter x:Key="EnumToBooleanConverterKey" />
+
+            <Style TargetType="{x:Type CheckBox}">
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <Style TargetType="TextBlock">
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <!--  PlaneButton  -->
+            <Style x:Key="PlaneButton" TargetType="{x:Type Button}">
+                <!--  <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}" />  -->
+                <Setter Property="Foreground" Value="#FFF" />
+                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Width" Value="Auto" />
+                <Setter Property="Height" Value="Auto" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+
+                            <Border x:Name="border" BorderThickness="0">
+                                <Grid x:Name="btnGrid" ShowGridLines="False">
+                                    <Border Background="Transparent">
+                                        <ContentPresenter x:Name="contentPresenter" Content="{TemplateBinding Property=ContentControl.Content}" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <ControlTemplate.Triggers>
+
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.5" />
+                                    <Setter TargetName="border" Property="Opacity" Value="1" />
+                                    <Setter TargetName="contentPresenter" Property="Opacity" Value="0.5" />
+                                </Trigger>
+
+                                <Trigger Property="IsPressed" Value="True">
+                                    <!--  <Setter TargetName="btnGrid" Property="Background" Value="White" />  -->
+                                </Trigger>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid x:Name="LayoutRoot">
+
+        <Grid Margin="40,40,40,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="deviceSettingGrid" Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <CheckBox x:Name="toggleDeviceBackupOption"
+                          Grid.Row="0"
+                          VerticalAlignment="Top"
+                          Content="Enable backup sources from External Devices"
+                          IsChecked="{Binding IsDeviceBackupEnabled,
+                                              Mode=TwoWay,
+                                              UpdateSourceTrigger=PropertyChanged}" />
+
+                <CheckBox x:Name="toggleDefaultMediaBackupPathOption"
+                          Grid.Row="1"
+                          Margin="0,15,0,0"
+                          VerticalAlignment="Top"
+                          Content="Also copy photos/videos from External Media to:"
+                          IsChecked="{Binding Path=IsDefaultMediaBackupPathEnabled}"
+                          IsEnabled="{Binding Path=IsDeviceBackupEnabled,
+                                              Mode=TwoWay,
+                                              UpdateSourceTrigger=PropertyChanged}" />
+
+                <DockPanel Grid.Row="2"
+                           Margin="0,15,0,0"
+                           VerticalAlignment="Top"
+                           IsEnabled="{Binding Path=IsDeviceBackupEnabled,
+                                               Mode=TwoWay,
+                                               UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox Width="240"
+                             Height="30"
+                             VerticalContentAlignment="Center"
+                             IsEnabled="{Binding Path=IsDefaultMediaBackupPathEnabled}"
+                             Text="{Binding Path=DefaultMediaBackupPath}" />
+                    <Button x:Name="browseBtn"
+                            Width="98"
+                            Height="35"
+                            Margin="7,0,0,0"
+                            Background="#00D680"
+                            BorderThickness="0"
+                            Command="{Binding Path=BrowseMediaBackupPathCommand}"
+                            Content="Browse"
+                            FontSize="15"
+                            FontWeight="Bold"
+                            Foreground="White" />
+                </DockPanel>
+
+                <Rectangle x:Name="separator"
+                           Grid.Row="3"
+                           Height="1"
+                           Margin="0,30,0,0"
+                           HorizontalAlignment="Stretch"
+                           Stroke="LightGray" />
+            </Grid>
+
+            <Grid x:Name="deviceListGrid"
+                  Grid.Row="1"
+                  Margin="0,30,0,0"
+                  VerticalAlignment="Stretch">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="deviceCaption"
+                               Grid.Row="0"
+                               FontSize="20"
+                               FontWeight="DemiBold"
+                               Text="Devices" />
+
+                    <Button x:Name="refresh"
+                            Command="{Binding Path=RefreshCommand}"
+                            Style="{StaticResource PlaneButton}"
+                            ToolTip="Refresh">
+                        <Path Width="18"
+                              Height="18"
+                              Margin="12,0,0,0"
+                              Data="M18.400024,0C25.900024,-2.0281277E-07 32,6.4000198 32,14.400015 32,22.300004 25.900024,28.799998 18.400024,28.799998 15.599976,28.799998 13.099976,27.900006 10.900024,26.400006L13.200012,22.699996C14.700012,23.699996 16.5,24.400008 18.400024,24.400008 23.599976,24.400008 27.799988,19.90001 27.799988,14.400015 27.799988,8.9000179 23.599976,4.4000213 18.400024,4.4000213 14.299988,4.4000213 10.799988,7.3000133 9.5,11.200005L14.299988,11.300011 7.0999756,23.09999 0,11.099999 5.2000122,11.200005C6.5999756,4.8000152,12,-2.0281277E-07,18.400024,0z"
+                              Fill="#00d57f"
+                              RenderTransformOrigin="0.5,0.5"
+                              Stretch="Uniform">
+                            <Path.RenderTransform>
+                                <TransformGroup>
+                                    <TransformGroup.Children>
+                                        <RotateTransform Angle="0" />
+                                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                                    </TransformGroup.Children>
+                                </TransformGroup>
+                            </Path.RenderTransform>
+                        </Path>
+                    </Button>
+
+
+                </StackPanel>
+
+
+                <Grid x:Name="listGrid"
+                      Grid.Row="1"
+                      Margin="0,15,0,0">
+
+                    <Rectangle x:Name="emptyRectView"
+                               Margin="0"
+                               Stroke="#00d57f"
+                               StrokeDashArray="4 4"
+                               StrokeThickness="2" />
+
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontFamily="Segoe UI Light"
+                               Text="{Binding Path=InfoText}" />
+
+                    <ListBox Margin="0"
+                             VerticalAlignment="Stretch"
+                             HorizontalContentAlignment="Stretch"
+                             VerticalContentAlignment="Top"
+                             BorderThickness="0"
+                             DockPanel.Dock="Bottom"
+                             FocusVisualStyle="{x:Null}"
+                             ItemsSource="{Binding Path=StoredDevices,
+                                                   UpdateSourceTrigger=PropertyChanged,
+                                                   Mode=TwoWay}"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             Visibility="{Binding DefaultView,
+                                                  Converter={StaticResource BooleanToVisibilityConverterKey},
+                                                  Mode=TwoWay,
+                                                  UpdateSourceTrigger=PropertyChanged}">
+
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource Self}}" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <ContentPresenter />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,7,0,7" VerticalAlignment="Top">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--
+                                        <Image Grid.Column="0"
+                                        Margin="0,0,12,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Source="/Assets/Images/close.png" />
+                                    -->
+                                    <Button x:Name="clearImageButton"
+                                            Grid.Column="0"
+                                            Margin="0,0,12,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Panel.ZIndex="3"
+                                            Command="{Binding Path=DataContext.ClearDeviceCommand,
+                                                              RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                            CommandParameter="{Binding}"
+                                            IsTabStop="False"
+                                            Style="{StaticResource PlaneButton}"
+                                            ToolTip="Clear device">
+                                        <Path Width="20"
+                                              Height="20"
+                                              Margin="0,2,5,0"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"
+                                              Data="M284.333,203.151L203.222,284.332 302.909,384.017 203.151,483.775 284.26,564.849 384.09,465.164 483.74,564.849 564.849,483.775 465.199,384.017 564.849,284.332 483.74,203.151 384.09,302.874z M384.018,0C595.701,5E-06 768,172.264 768,384.017 768,595.738 595.701,768 384.018,768 172.226,768 -4E-06,595.738 0,384.017 -4E-06,172.264 172.226,5E-06 384.018,0z"
+                                              Fill="DarkGray"
+                                              RenderTransformOrigin="0.5,0.5"
+                                              Stretch="Uniform">
+                                            <Path.RenderTransform>
+                                                <TransformGroup>
+                                                    <RotateTransform Angle="0" />
+                                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                </TransformGroup>
+                                            </Path.RenderTransform>
+                                        </Path>
+                                    </Button>
+
+                                    <TextBlock Grid.Column="1"
+                                               HorizontalAlignment="Left"
+                                               FontSize="14"
+                                               Text="{Binding DisplayName}" />
+
+                                    <!--
+                                        <CheckBox Grid.Column="2"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding DataContext.ImportOptionToggleCommand,
+                                        RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                        CommandParameter="{Binding}"
+                                        IsChecked="{Binding ImportOption,
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        Converter={StaticResource EnumToBooleanConverterKey}}" />
+                                    -->
+                                    <ToggleButton x:Name="toggleImportOptionBtn"
+                                                  Grid.Column="2"
+                                                  Width="40"
+                                                  Height="20"
+                                                  HorizontalAlignment="Right"
+                                                  Background="Transparent"
+                                                  BorderBrush="Transparent"
+                                                  BorderThickness="0"
+                                                  Command="{Binding Path=DataContext.ImportOptionToggleCommand,
+                                                                    RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                                  CommandParameter="{Binding}"
+                                                  IsChecked="{Binding ImportOption,
+                                                                      Mode=TwoWay,
+                                                                      UpdateSourceTrigger=PropertyChanged,
+                                                                      Converter={StaticResource EnumToBooleanConverterKey}}">
+                                        <ToggleButton.Style>
+                                            <Style BasedOn="{StaticResource PlaneToggleButton}" TargetType="ToggleButton">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ImportOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToBooleanConverterKey}}" Value="True">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Source="/Assets/Images/devices-on-x2.png" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding ImportOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToBooleanConverterKey}}" Value="False">
+                                                        <Setter Property="Content">
+                                                            <Setter.Value>
+                                                                <Image Source="/Assets/Images/devices-off-x2.png" />
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ToggleButton.Style>
+
+
+                                    </ToggleButton>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+
+</Window>
